@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.col {
+	padding-bottom: 15px;
+}
+
+.col .btn {
+	margin-bottom: 20px;
+}
+
+.card .card-subtitle {
+	margin-bottom: 0.75rem;
+}
+
+.navbar {
+	margin-bottom: 15px;
+}
