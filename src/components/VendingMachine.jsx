@@ -15,7 +15,8 @@ class VendingMachine extends Component {
       products: [],
       purchaseDisabled: false,
       message: '',
-      showMessage: false
+      showMessage: false,
+      success: false
     };
     this.getInitialData = this.getInitialData.bind(this);
     this.addCoin = this.addCoin.bind(this);
@@ -71,17 +72,19 @@ class VendingMachine extends Component {
 
   purchase(index) {
     const { coins, products } = this.state;
+    const insertedCoins = coins.filter(x => x.quantity > 0);
 
     ApiClient.Products.purchase({
       productType: products[index].productType,
-      coins: coins.filter(x => x.quantity > 0).map(x => ({ coinType: x.coinType, quantity: x.quantity }))
+      coins: insertedCoins.map(x => ({ coinType: x.coinType, quantity: x.quantity }))
     }).then(result => {
       this.setState({
         amountInserted: 0,
-        change: result.change,
+        change: result.success ? result.change : insertedCoins,
         products: result.products,
         message: result.message,
         showMessage: true,
+        success: result.success,
         purchaseDisabled: true
       });
     });
@@ -95,12 +98,13 @@ class VendingMachine extends Component {
       products,
       purchaseDisabled,
       message,
-      showMessage
+      showMessage,
+      success
     } = this.state;
 
     return (
       <Container>
-        {showMessage && <Alert color="success">{message}</Alert>}
+        {showMessage && <Alert color={success ? 'success' : 'danger'}>{message}</Alert>}
         <Row>
           <Col className="text-center">
             <Products amountInserted={amountInserted} items={products} onClick={this.purchase} />
